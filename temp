@@ -1,0 +1,12 @@
+package AoCyy
+
+import (
+	"AoC/utils"
+	"fmt"
+)
+
+func AoCdd() {
+	fmt.Println("On " + utils.DateStringForDay(20yy, dd) + ":")
+	fmt.Println("Part 1:")
+	fmt.Println("Part 2:")
+}
