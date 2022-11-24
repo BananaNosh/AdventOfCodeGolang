@@ -1,7 +1,7 @@
 package main
 
 import (
-	AoC "AoC/AoC2015"
+	AoC "AoC/AoC2016"
 	"fmt"
 	"os"
 	"strconv"

@@ -1,12 +1,13 @@
 package AoCyy
 
 import (
-	"AoC/utils"
+	"AoC/utils/date"
 	"fmt"
 )
 
 func AoCdd() {
-	fmt.Println("On " + utils.DateStringForDay(20yy, dd) + ":")
+	fmt.Println("On " + date.DateStringForDay(yyyy, dd) + ":")
+	//input := io.ReadInput(dd, yyyy)
 	fmt.Println("Part 1:")
 	fmt.Println("Part 2:")
 }

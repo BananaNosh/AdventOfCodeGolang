@@ -16,13 +16,13 @@ for i in {1..25};
 do
   FILE="AoC_""$SHORT_YEAR""_$i.go"
   if ! [[ -f $FILE ]]; then
-    cat ../temp | sed "s/dd/$i/" | sed "s/yyyy/YEAR/" | sed "s/yy/$SHORT_YEAR/" > $FILE;
+    cat ../temp | sed "s/dd/$i/" | sed "s/yyyy/$YEAR/" | sed "s/yy/$SHORT_YEAR/" > $FILE;
   fi
-  (
-  cd $INPUT_F || continue
-  FILE="input""_$i.txt"
-  if ! [[ -f $FILE ]]; then
-    touch $FILE
-  fi
-  )
+#  (
+#  cd $INPUT_F || continue
+#  FILE="input""_$i.txt"
+#  if ! [[ -f $FILE ]]; then
+#    touch $FILE
+#  fi
+#  )
 done
