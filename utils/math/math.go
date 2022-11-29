@@ -24,6 +24,30 @@ func Gcd(first uint, second uint) uint {
 	return Gcd(small, big%small)
 }
 
+func MaxInSlice[T types.Number](numbers []T) T {
+	var max T
+	max = numbers[0]
+	for _, value := range numbers[1:] {
+		if value > max {
+			max = value
+		}
+	}
+
+	return max
+}
+
+func MinInSlice[T types.Number](numbers []T) T {
+	var min T
+	min = numbers[0]
+	for _, value := range numbers[1:] {
+		if value < min {
+			min = value
+		}
+	}
+
+	return min
+}
+
 func Max[T types.Number](first, second T) T {
 	if first > second {
 		return first

@@ -44,7 +44,7 @@ func HasValue[K Key, V Value](_map map[K]V, searchedValue V) bool {
 	return false
 }
 
-func Sum[K Key, V NumberValue](_map map[K]V) V {
+func SumMapValues[K Key, V NumberValue](_map map[K]V) V {
 	var sum V
 	sum = 0
 
@@ -53,4 +53,32 @@ func Sum[K Key, V NumberValue](_map map[K]V) V {
 	}
 
 	return sum
+}
+
+func Max[K, Key, V NumberValue](_map map[K]V) (K, V) {
+	var max V
+	var maxKey K
+	maxKey = Peek(_map)
+	max = _map[maxKey]
+	for key, value := range _map {
+		if value > max {
+			max = value
+			maxKey = key
+		}
+	}
+	return maxKey, max
+}
+
+func Min[K, Key, V NumberValue](_map map[K]V) (K, V) {
+	var min V
+	var minKey K
+	minKey = Peek(_map)
+	min = _map[minKey]
+	for key, value := range _map {
+		if value < min {
+			min = value
+			minKey = key
+		}
+	}
+	return minKey, min
 }

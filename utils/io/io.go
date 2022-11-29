@@ -89,7 +89,7 @@ func ReadInputFromRegexInt(regex string, date ...int) [][]int {
 func createFile(day int, year int, path string) {
 	puzzleInput := requests.LoadInput(day, year)
 
-	err := os.WriteFile(path, []byte(puzzleInput), 0755)
+	err := os.WriteFile(path, []byte(puzzleInput), 0644)
 
 	if err != nil {
 		panic(err)
