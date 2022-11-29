@@ -5,6 +5,7 @@ import (
 	"AoC/utils/date"
 	"AoC/utils/io"
 	math2 "AoC/utils/math"
+	"AoC/utils/requests"
 	"fmt"
 	"strconv"
 )
@@ -17,7 +18,9 @@ func AoC1() {
 	fmt.Println(math2.Abs(pos.x) + math2.Abs(pos.y))
 	fmt.Println("Part 2:")
 	pos = findDest(input, true)
-	fmt.Println(math2.Abs(pos.x) + math2.Abs(pos.y))
+	sol2 := math2.Abs(pos.x) + math2.Abs(pos.y)
+	fmt.Println(sol2)
+	requests.SubmitAnswer(1, 2016, sol2, 2)
 }
 
 type Position struct {
