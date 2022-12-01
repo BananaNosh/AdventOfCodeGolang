@@ -7,8 +7,7 @@ type Number interface {
 }
 
 func ToIntSlice(slice []string) []int {
-	sliceToReturn := []int{}
-
+	var sliceToReturn []int
 	for _, current := range slice {
 		convertedString, err := strconv.Atoi(current)
 
@@ -18,7 +17,16 @@ func ToIntSlice(slice []string) []int {
 
 		sliceToReturn = append(sliceToReturn, convertedString)
 	}
+	return sliceToReturn
+}
 
+func ToStringSlice(slice []int) []string {
+	var sliceToReturn []string
+	for _, current := range slice {
+		convertedInt := strconv.Itoa(current)
+
+		sliceToReturn = append(sliceToReturn, convertedInt)
+	}
 	return sliceToReturn
 }
 

@@ -1,6 +1,9 @@
 package math
 
-import "AoC/utils/types"
+import (
+	"AoC/utils/collections"
+	"AoC/utils/types"
+)
 
 func Abs(x int) int {
 	if x < 0 {
@@ -61,4 +64,29 @@ func Min[T types.Number](first, second T) T {
 
 func MaxInt() int {
 	return int(^uint(0) >> 1)
+}
+
+func Range[T types.Number](params ...T) []T {
+	if len(params) > 3 || len(params) < 1 {
+		panic("Should get 1-3 params")
+	}
+	var start, stop, step T
+	start = 0
+	step = 1
+	if len(params) == 1 {
+		stop = params[0]
+	} else if len(params) == 2 {
+		start, stop = collections.UnpackTwo(params)
+	} else {
+		start, stop, step = collections.UnpackThree(params)
+	}
+	if stop <= start {
+		panic("stop smaller than start")
+	}
+	r := make([]T, int((stop-start)/step))
+	r[0] = start
+	for i := range r[1:] {
+		r[i+1] = r[i] + step
+	}
+	return r
 }
