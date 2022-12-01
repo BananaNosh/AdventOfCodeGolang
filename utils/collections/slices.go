@@ -2,17 +2,17 @@ package collections
 
 import "AoC/utils/types"
 
-func unpackIndirect[T any](slice []T, vars ...*T) {
+func UnpackIndirect[T any](slice []T, vars ...*T) {
 	for i, elem := range slice {
 		*vars[i] = elem
 	}
 }
 
-func unpackTwo[T any](slice []T) (T, T) {
+func UnpackTwo[T any](slice []T) (T, T) {
 	return slice[0], slice[1]
 }
 
-func unpackThree[T any](slice []T) (T, T, T) {
+func UnpackThree[T any](slice []T) (T, T, T) {
 	return slice[0], slice[1], slice[2]
 }
 
@@ -37,7 +37,7 @@ func Contains[T comparable](slice []T, word T) bool {
 	return false
 }
 
-func reduce[T, M any](s []T, f func(M, T) M, initValue M) M {
+func Reduce[T, M any](s []T, f func(M, T) M, initValue M) M {
 	acc := initValue
 	for _, v := range s {
 		acc = f(acc, v)
@@ -45,14 +45,22 @@ func reduce[T, M any](s []T, f func(M, T) M, initValue M) M {
 	return acc
 }
 
+func Map[T, M any](s []T, f func(T) M) []M {
+	var acc []M
+	for _, v := range s {
+		acc = append(acc, f(v))
+	}
+	return acc
+}
+
 func Sum[T types.Number](slice []T) T {
-	return reduce(slice, func(s T, acc T) T {
+	return Reduce(slice, func(acc T, s T) T {
 		return acc + s
 	}, 0)
 }
 
 func Prod[T types.Number](slice []T) T {
-	return reduce(slice, func(s T, acc T) T {
+	return Reduce(slice, func(acc T, s T) T {
 		return acc * s
 	}, 1)
 }
