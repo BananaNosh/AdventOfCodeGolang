@@ -45,10 +45,26 @@ func Reduce[T, M any](s []T, f func(M, T) M, initValue M) M {
 	return acc
 }
 
+func ReduceWithIndex[T, M any](s []T, f func(int, M, T) M, initValue M) M {
+	acc := initValue
+	for i, v := range s {
+		acc = f(i, acc, v)
+	}
+	return acc
+}
+
 func Map[T, M any](s []T, f func(T) M) []M {
 	var acc []M
 	for _, v := range s {
 		acc = append(acc, f(v))
+	}
+	return acc
+}
+
+func MapWithIndex[T, M any](s []T, f func(int, T) M) []M {
+	var acc []M
+	for i, v := range s {
+		acc = append(acc, f(i, v))
 	}
 	return acc
 }
