@@ -1,6 +1,7 @@
 package io
 
 import (
+	"AoC/utils/collections"
 	date2 "AoC/utils/date"
 	"AoC/utils/requests"
 	"AoC/utils/types"
@@ -66,11 +67,18 @@ func ReadInputFromRegex(regex string, date ...int) [][]string {
 	}
 	var result [][]string
 	for _, line := range lines {
-		line_matches := pattern.FindAll([]byte(line), -1)
+		line_matches := pattern.FindAllStringSubmatch(line, -1)
+		submatches := collections.Reduce(line_matches, func(acc []string, match []string) []string {
+			if len(match) > 1 {
+				return append(acc, match[1:]...)
+			}
+			return append(acc, match...)
+		}, []string{})
+		fmt.Println(line_matches)
 
 		var parsed []string
-		for _, m := range line_matches {
-			parsed = append(parsed, string(m))
+		for _, m := range submatches {
+			parsed = append(parsed, m)
 		}
 		result = append(result, parsed)
 	}
