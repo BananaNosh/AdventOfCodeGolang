@@ -58,7 +58,7 @@ func SubmitAnswer(day int, year int, answer int, part int) {
 
 func SubmitStringAnswer(day int, year int, answer string, part int) {
 	answerState := CheckForAnswerToSubmit(day, year, answer, part)
-	defer fmt.Print(colorReset)
+	defer fmt.Print(colorReset + "\n")
 	if answerState == Correct {
 		fmt.Printf(colorGreen+"Answer %s already given and correct!\n", answer)
 		return

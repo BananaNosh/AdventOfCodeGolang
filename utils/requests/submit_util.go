@@ -71,7 +71,7 @@ func CheckForAnswerToSubmit(day int, year int, answer string, part int) AnswerSt
 	fileName := fileNameForAnswer(day, year, part, true)
 	readAnswer, err := os.ReadFile(fileName)
 	if err == nil {
-		if string(readAnswer) == answer {
+		if strings.TrimSpace(string(readAnswer)) == answer {
 			return Correct
 		}
 		return Wrong
