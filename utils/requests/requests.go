@@ -52,6 +52,29 @@ func LoadInput(day int, year int) string {
 	return string(body)
 }
 
+func LoadExample(day int, year int) string {
+	url := fmt.Sprintf(BaseUrl, year, day)
+	fmt.Println(url)
+	response, err := http.Get(url)
+
+	if err != nil {
+		panic(err)
+	}
+
+	doc, err := goquery.NewDocumentFromReader(response.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	example := doc.Find("pre").Text()
+
+	if example == "" {
+		panic("No example found")
+	}
+
+	return example
+}
+
 func SubmitAnswer(day int, year int, answer int, part int) {
 	SubmitStringAnswer(day, year, strconv.Itoa(answer), part)
 }

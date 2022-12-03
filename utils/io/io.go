@@ -6,14 +6,64 @@ import (
 	"AoC/utils/requests"
 	"AoC/utils/types"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
+const (
+	ExampleOsVariableName = "EXAMPLE_%d_%d"
+)
+
 func ReadInput(date ...int) string {
+	day, year, _, _ := getDayAndYearString(date)
+	shouldUseExample, ok := os.LookupEnv(fmt.Sprintf(ExampleOsVariableName, year, day))
+	if ok && shouldUseExample == strconv.FormatBool(true) {
+		return readExample(date...)
+	}
+	return readInput(date...)
+}
+
+func readInput(date ...int) string {
+	day, year, yearString, dayString := getDayAndYearString(date)
+
+	filePath := fmt.Sprintf("AoC%v/input/input_%v.txt", yearString, dayString)
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		createFile(filePath, requests.LoadInput(day, year))
+	}
+	//else {
+	//	fmt.Println("INFO: File already exists.. Will not create new one")
+	//}
+
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	return strings.Trim(string(file), "\n")
+}
+
+func readExample(date ...int) string {
+	day, year, yearString, dayString := getDayAndYearString(date)
+
+	filePath := fmt.Sprintf("AoC%v/example/example_%v.txt", yearString, dayString)
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		createFile(filePath, requests.LoadExample(day, year))
+	}
+	//else {
+	//	fmt.Println("INFO: File already exists.. Will not create new one")
+	//}
+
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	return strings.Trim(string(file), "\n")
+}
+
+func getDayAndYearString(date []int) (int, int, string, string) {
 	var day, year int
 	day = 0
 	year = 0
@@ -33,21 +83,7 @@ func ReadInput(date ...int) string {
 
 	yearString := strconv.Itoa(year)
 	dayString := strconv.Itoa(day)
-
-	filePath := fmt.Sprintf("AoC%v/input/input_%v.txt", yearString, dayString)
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		createFile(day, year, filePath)
-	}
-	//else {
-	//	fmt.Println("INFO: File already exists.. Will not create new one")
-	//}
-
-	file, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		panic(err)
-	}
-
-	return strings.Trim(string(file), "\n")
+	return day, year, yearString, dayString
 }
 
 func ReadAndSplitInput(delimiter string, date ...int) []string {
@@ -94,10 +130,8 @@ func ReadInputFromRegexInt(regex string, date ...int) [][]int {
 	return result
 }
 
-func createFile(day int, year int, path string) {
-	puzzleInput := requests.LoadInput(day, year)
-
-	err := os.WriteFile(path, []byte(puzzleInput), 0644)
+func createFile(path string, content string) {
+	err := os.WriteFile(path, []byte(content), 0644)
 
 	if err != nil {
 		panic(err)

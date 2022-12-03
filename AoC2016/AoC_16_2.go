@@ -51,5 +51,5 @@ func AoC2() {
 	fmt.Println(number)
 	requests.SubmitAnswer(day, year, number, 1)
 	fmt.Println("Part 2:")
-	// requests.SendAnswer(day, year, 0, 2)
+	// requests.SubmitAnswer(day, year, 0, 2)
 }

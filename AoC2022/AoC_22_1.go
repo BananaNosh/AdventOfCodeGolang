@@ -27,12 +27,12 @@ func AoC1() {
 	})
 	max := math.MaxInSlice(totalPerElve)
 	fmt.Println(max)
-	//requests.SendAnswer(day, year, max, 1)
+	//requests.SubmitAnswer(day, year, max, 1)
 	fmt.Println("Part 2:")
 	sort.Ints(totalPerElve)
 	fmt.Println(totalPerElve[:3])
 	//maxMultiple := totalPerElve[len(totalPerElve)-3:]
 	maxMultiple := collections.Sum(totalPerElve[len(totalPerElve)-3:])
 	fmt.Println(maxMultiple)
-	requests.SendAnswer(day, year, maxMultiple, 2)
+	requests.SubmitAnswer(day, year, maxMultiple, 2)
 }

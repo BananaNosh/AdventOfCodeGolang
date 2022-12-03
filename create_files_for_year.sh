@@ -26,6 +26,8 @@ fi
 cd $FOLDER || exit
 INPUT_F="input"
 if ! [[ -d $INPUT_F ]]; then  mkdir $INPUT_F; fi
+EXAMPLE_F="example"
+if ! [[ -d $EXAMPLE_F ]]; then  mkdir $EXAMPLE_F; fi
 for i in $(seq 1 $MAX);
 do
   FILE="AoC_""$SHORT_YEAR""_$i.go"
