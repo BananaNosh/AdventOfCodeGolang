@@ -11,7 +11,7 @@ func AoCdd() {
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
 	//input := io.ReadInput(dd, yyyy)
 	fmt.Println("Part 1:")
-	// requests.SendAnswer(day, year, 0, 1)
+	// requests.SubmitAnswer(day, year, 0, 1)
 	fmt.Println("Part 2:")
-	// requests.SendAnswer(day, year, 0, 2)
+	// requests.SubmitAnswer(day, year, 0, 2)
 }

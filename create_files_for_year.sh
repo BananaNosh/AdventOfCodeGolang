@@ -17,10 +17,10 @@ BEFORE_LINE_START=$(echo "$LINE_START - 1" | bc)
 LINE_END=$(echo "$SWITCH_LINE_OFFSET+51" | bc)
 echo $MAX $LINE_START $LINE_END
 if [ $MAX -lt 25 ]; then
-  sed -i "$LINE_START,$LINE_END s/^\t/\/\/\t/" AoC_main.go
+  sed -i "$LINE_START,$LINE_END s/^\t\([^\/\/]\)/\t\/\/\1/" AoC_main.go
 fi
 if [ $MAX -gt 1 ]; then
-  sed -i "$SWITCH_LINE_OFFSET,$BEFORE_LINE_START s/^\/\///" AoC_main.go
+  sed -i -r "$SWITCH_LINE_OFFSET,$BEFORE_LINE_START s/^\t\/\//\t/" AoC_main.go
 fi
 
 cd $FOLDER || exit
