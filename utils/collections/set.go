@@ -48,16 +48,39 @@ func (set *Set[T]) Size() int {
 	return len(set.elements)
 }
 
-func (set *Set[T]) Intersect(setToIntersectWith Set[T]) Set[T] {
+func (set *Set[T]) Difference(setToIntersectWith Set[T]) Set[T] {
 	resultSet := NewSet[T]()
-
 	for element := range set.elements {
-		if set.Has(element) != setToIntersectWith.Has(element) {
+		if !setToIntersectWith.Has(element) {
 			resultSet.Add(element)
 		}
 	}
 
 	return resultSet
+}
+
+func (set *Set[T]) Intersect(setToIntersectWith Set[T]) Set[T] {
+	resultSet := NewSet[T]()
+	for element := range set.elements {
+		if setToIntersectWith.Has(element) {
+			resultSet.Add(element)
+		}
+	}
+	return resultSet
+}
+
+func (set *Set[T]) GetRandom() T {
+	for element := range set.elements {
+		return element
+	}
+	panic("Set is Empty")
+}
+
+func (set *Set[T]) GetRandomOrDefault(def T) T {
+	for element := range set.elements {
+		return element
+	}
+	return def
 }
 
 func (set Set[T]) String() string {
