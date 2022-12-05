@@ -29,10 +29,10 @@ func main() {
 		AoC.AoC3()
 	case 4:
 		AoC.AoC4()
-	//case 5:
-	//	AoC.AoC5()
-	//case 6:
-	//	AoC.AoC6()
+	case 5:
+		AoC.AoC5()
+	case 6:
+		AoC.AoC6()
 	//case 7:
 	//	AoC.AoC7()
 	//case 8:
