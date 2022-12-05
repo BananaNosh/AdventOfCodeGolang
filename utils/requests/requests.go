@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	url2 "net/url"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -14,14 +15,15 @@ import (
 )
 
 const (
-	BaseUrl     = "https://adventofcode.com/%v/day/%v"
-	InputUrl    = BaseUrl + "/input"
-	AnswerUrl   = BaseUrl + "/answer"
-	colorRed    = "\033[31m"
-	colorGreen  = "\033[32m"
-	colorYellow = "\033[33m"
-	colorOrange = "\033[34m"
-	colorReset  = "\033[0m"
+	BaseUrl               = "https://adventofcode.com/%v/day/%v"
+	InputUrl              = BaseUrl + "/input"
+	AnswerUrl             = BaseUrl + "/answer"
+	colorRed              = "\033[31m"
+	colorGreen            = "\033[32m"
+	colorYellow           = "\033[33m"
+	colorOrange           = "\033[34m"
+	colorReset            = "\033[0m"
+	ExampleOsVariableName = "EXAMPLE_%d_%d"
 )
 
 func LoadInput(day int, year int) string {
@@ -103,6 +105,10 @@ func SendAnswer(day int, year int, answer int, part int) {
 }
 
 func SendStringAnswer(day int, year int, answer string, part int) bool {
+	shouldUseExample, ok := os.LookupEnv(fmt.Sprintf(ExampleOsVariableName, year, day))
+	if ok && shouldUseExample == strconv.FormatBool(true) {
+		panic("Should not be in Example mode for submitting")
+	}
 	url := fmt.Sprintf(AnswerUrl, year, day)
 	fmt.Println(url)
 	data := url2.Values{
