@@ -1,6 +1,8 @@
 package collections
 
-import "AoC/utils/types"
+import (
+	"AoC/utils/types"
+)
 
 func UnpackIndirect[T any](slice []T, vars ...*T) {
 	for i, elem := range slice {
