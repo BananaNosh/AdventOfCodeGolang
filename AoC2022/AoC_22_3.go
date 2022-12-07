@@ -50,6 +50,8 @@ func AoC3() {
 	year := 2022
 	day := 3
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
+	// setting EXAMPLE variable
+	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 	lines := io.ReadInputLines(3, 2022)
 	fmt.Println("Part 1:")
 	wrongItems := collections.Map(lines, findWrongItemInRucksack)

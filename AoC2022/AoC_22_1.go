@@ -16,7 +16,8 @@ func AoC1() {
 	year := 2022
 	day := 1
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
-	elves := io.ReadAndSplitInput("\n\n", 2022)
+	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
+	elves := io.ReadAndSplitInput("\n\n", 2022, 1)
 	fmt.Println("Part 1:")
 	weightsPerElve := collections.Map(elves, func(elf string) []int {
 		return types.ToIntSlice(strings.Split(elf, "\n"))
