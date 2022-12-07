@@ -54,7 +54,7 @@ func LoadInput(day int, year int) string {
 	return string(body)
 }
 
-func LoadExample(day int, year int) string {
+func LoadExample(day int, year int) (example string) {
 	url := fmt.Sprintf(BaseUrl, year, day)
 	fmt.Println(url)
 	response, err := http.Get(url)
@@ -68,12 +68,20 @@ func LoadExample(day int, year int) string {
 		panic(err)
 	}
 
-	example := doc.Find("pre").Text()
+	preSelector := doc.Find("pre")
+	preSelector.Each(func(i int, possibleExample *goquery.Selection) {
+		//fmt.Println(possibleExample.Text())
+		previousLine := possibleExample.Prev().Text()
+		exampleReg := regexp.MustCompile("For example(,[,\\w ]+)?:")
+		if exampleReg.MatchString(previousLine) {
+			example = possibleExample.Text()
+			return
+		}
+	})
 
 	if example == "" {
 		panic("No example found")
 	}
-
 	return example
 }
 
