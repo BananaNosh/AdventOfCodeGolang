@@ -42,3 +42,5 @@ do
 #  fi
 #  )
 done
+
+# TODO make every day own package
