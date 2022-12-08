@@ -130,6 +130,19 @@ func ReadInputFromRegexInt(regex string, date ...int) [][]int {
 	return result
 }
 
+func ReadInputAs2DInts(date ...int) [][]int {
+	var result [][]int
+	lines := ReadInputLines(date...)
+	for _, line := range lines {
+		var line_symbols []string
+		for _, n := range line {
+			line_symbols = append(line_symbols, string(n))
+		}
+		result = append(result, types.ToIntSlice(line_symbols))
+	}
+	return result
+}
+
 func createFile(path string, content string) {
 	err := os.WriteFile(path, []byte(content), 0644)
 
