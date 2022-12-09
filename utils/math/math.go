@@ -1,7 +1,6 @@
 package math
 
 import (
-	"AoC/utils/collections"
 	"AoC/utils/types"
 )
 
@@ -76,9 +75,14 @@ func Range[T types.Number](params ...T) []T {
 	if len(params) == 1 {
 		stop = params[0]
 	} else if len(params) == 2 {
-		start, stop = collections.UnpackTwo(params)
+		//start, stop = collections.UnpackTwo(params) // TODO use
+		start = params[0]
+		stop = params[1]
 	} else {
-		start, stop, step = collections.UnpackThree(params)
+		//start, stop, step = collections.UnpackThree(params) // TODO use
+		start = params[0]
+		stop = params[1]
+		step = params[2]
 	}
 	if stop <= start {
 		panic("stop smaller than start")

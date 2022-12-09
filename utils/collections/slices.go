@@ -1,6 +1,7 @@
 package collections
 
 import (
+	"AoC/utils/math"
 	"AoC/utils/types"
 )
 
@@ -81,4 +82,10 @@ func Prod[T types.Number](slice []T) T {
 	return Reduce(slice, func(acc T, s T) T {
 		return acc * s
 	}, 1)
+}
+
+func MaxNumber[T types.Number](slice []T) T { // TODO rename after package fix
+	return Reduce(slice, func(acc T, s T) T {
+		return math.Max(acc, s)
+	}, slice[0])
 }
