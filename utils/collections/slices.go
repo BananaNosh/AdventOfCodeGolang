@@ -19,6 +19,10 @@ func UnpackThree[T any](slice []T) (T, T, T) {
 	return slice[0], slice[1], slice[2]
 }
 
+func Last[T any](slice []T) T {
+	return slice[len(slice)-1]
+}
+
 func Filter[T any](slice []T, filterFunc func(T) bool) []T {
 	retSlice := make([]T, 0)
 

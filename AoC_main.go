@@ -37,8 +37,8 @@ func main() {
 		AoC.AoC7()
 	case 8:
 		AoC.AoC8()
-	//case 9:
-	//	AoC.AoC9()
+	case 9:
+		AoC.AoC9()
 	//case 10:
 	//	AoC.AoC10()
 	//case 11:
