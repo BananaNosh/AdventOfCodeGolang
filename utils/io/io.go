@@ -110,7 +110,7 @@ func ReadInputFromRegex(regex string, date ...int) [][]string {
 			}
 			return append(acc, match...)
 		}, []string{})
-		fmt.Println(line_matches)
+		//fmt.Println(line_matches)
 
 		var parsed []string
 		for _, m := range submatches {

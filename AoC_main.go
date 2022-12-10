@@ -39,14 +39,14 @@ func main() {
 		AoC.AoC8()
 	case 9:
 		AoC.AoC9()
-	//case 10:
-	//	AoC.AoC10()
-	//case 11:
-	//	AoC.AoC11()
-	//case 12:
-	//	AoC.AoC12()
-	//case 13:
-	//	AoC.AoC13()
+	case 10:
+		AoC.AoC10()
+	case 11:
+		AoC.AoC11()
+	case 12:
+		AoC.AoC12()
+	case 13:
+		AoC.AoC13()
 	//case 14:
 	//	AoC.AoC14()
 	//case 15:
