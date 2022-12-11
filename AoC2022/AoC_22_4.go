@@ -30,7 +30,7 @@ func AoC4() {
 	// setting EXAMPLE variable
 	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
-	input := io.ReadInputFromRegexInt("(\\d+)-(\\d+),(\\d+)-(\\d+)", 4, 2022)
+	input := io.ReadInputFromRegexPerLineInt("(\\d+)-(\\d+),(\\d+)-(\\d+)", 4, 2022)
 	fmt.Println(input)
 	fmt.Println("Part 1:")
 	total := reduceToTotalCount(input, checkIfContaining)

@@ -111,7 +111,7 @@ func AoC10() {
 	// setting EXAMPLE variable
 	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
-	lineTuples := io.ReadInputFromRegex("(\\w+) ?(-?\\d+)?", 10, 2022)
+	lineTuples := io.ReadInputFromRegexPerLine("(\\w+) ?(-?\\d+)?", 10, 2022)
 	commands := collections.Map(lineTuples, func(t []string) Command {
 		com := t[0]
 		if com == "nooo" {
@@ -131,4 +131,9 @@ func AoC10() {
 	screen := renderScreen(commands)
 	fmt.Println(screen)
 	requests.SubmitStringAnswer(day, year, "PZULBAUA", 2)
+
+	fmt.Println("#  #\n## #\n## #\n# ##\n# ##\n#  #")
+	fmt.Println()
+	fmt.Println("####\n#   \n### \n#   \n#   \n####")
+
 }

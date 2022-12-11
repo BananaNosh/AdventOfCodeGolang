@@ -16,6 +16,35 @@ func (q *Queue[T]) Enqueue(element T) {
 	q.elements = append(q.elements, element)
 }
 
+func (q *Queue[T]) EnqueueMultiple(elements ...T) {
+	for _, element := range elements {
+		q.elements = append(q.elements, element)
+	}
+}
+
+func (q *Queue[T]) EnqueueQueue(other *Queue[T]) {
+	currentItemsInOther := other.Size()
+	for i := 0; i < currentItemsInOther; i++ {
+		otherItem := other.Dequeue()
+		q.Enqueue(otherItem)
+		other.Enqueue(otherItem)
+	}
+}
+
+func (q *Queue[T]) DequeAllIndex(f func(int, T)) {
+	currentItemsInQueue := q.Size()
+	for i := 0; i < currentItemsInQueue; i++ {
+		f(i, q.Dequeue())
+	}
+}
+
+func (q *Queue[T]) DequeAll(f func(T)) {
+	currentItemsInQueue := q.Size()
+	for i := 0; i < currentItemsInQueue; i++ {
+		f(q.Dequeue())
+	}
+}
+
 // Dequeue removes and returns the element at the front of the queue.
 // If the queue is empty, it throws an error
 func (q *Queue[T]) Dequeue() T {

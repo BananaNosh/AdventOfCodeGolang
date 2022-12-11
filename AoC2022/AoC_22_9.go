@@ -158,7 +158,7 @@ func AoC9() {
 	// setting EXAMPLE variable
 	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
-	instructionTuples := io.ReadInputFromRegex("(\\w) (\\d+)", 9, 2022)
+	instructionTuples := io.ReadInputFromRegexPerLine("(\\w) (\\d+)", 9, 2022)
 	instructions := collections.Map(instructionTuples, func(tuple []string) Instruction {
 		count, _ := strconv.Atoi(tuple[1])
 		return Instruction{direction: directionFromString(tuple[0]), count: count}

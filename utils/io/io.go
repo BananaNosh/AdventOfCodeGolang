@@ -95,12 +95,9 @@ func ReadInputLines(date ...int) []string {
 	return ReadAndSplitInput("\n", date...)
 }
 
-func ReadInputFromRegex(regex string, date ...int) [][]string {
+func ReadInputFromRegexPerLine(regex string, date ...int) [][]string {
 	lines := ReadInputLines(date...)
-	pattern, err := regexp.Compile(regex)
-	if err != nil {
-		panic(err)
-	}
+	pattern := regexp.MustCompile(regex)
 	var result [][]string
 	for _, line := range lines {
 		line_matches := pattern.FindAllStringSubmatch(line, -1)
@@ -121,13 +118,22 @@ func ReadInputFromRegex(regex string, date ...int) [][]string {
 	return result
 }
 
-func ReadInputFromRegexInt(regex string, date ...int) [][]int {
-	resultStrings := ReadInputFromRegex(regex, date...)
+func ReadInputFromRegexPerLineInt(regex string, date ...int) [][]int {
+	resultStrings := ReadInputFromRegexPerLine(regex, date...)
 	var result [][]int
 	for _, line := range resultStrings {
 		result = append(result, types.ToIntSlice(line))
 	}
 	return result
+}
+
+func ReadInputFromRegex(regex string, date ...int) [][]string {
+	pattern := regexp.MustCompile(regex)
+	input := ReadInput(date...)
+	line_matches := pattern.FindAllStringSubmatch(input, -1)
+	return collections.Map(line_matches, func(match []string) []string {
+		return match[1:]
+	})
 }
 
 func ReadInputAs2DInts(date ...int) [][]int {

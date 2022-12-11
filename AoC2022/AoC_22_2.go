@@ -72,8 +72,8 @@ func AoC2() {
 	day := 2
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
 	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
-	//input := io.ReadInputFromRegex("(A|B|C) (X|Y|Z)", 2, 2022)
-	input := io.ReadInputFromRegex("\\w", 2, 2022)
+	//input := io.ReadInputFromRegexPerLine("(A|B|C) (X|Y|Z)", 2, 2022)
+	input := io.ReadInputFromRegexPerLine("\\w", 2, 2022)
 	decisions := collections.Map(input, func(str []string) []GameDecision {
 		return collections.Map(str, StringToGameDecision)
 	})
