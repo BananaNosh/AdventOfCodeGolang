@@ -15,13 +15,14 @@ import (
 )
 
 type Monkey struct {
-	name        int
-	items       *collections.Queue[int]
-	operation   func(int, int) int
-	divCond     int
-	trueTo      int
-	falseTo     int
-	playedItems int
+	name           int
+	items          *collections.Queue[int]
+	operation      func(int, int) int
+	divCond        int
+	trueTo         int
+	falseTo        int
+	playedItems    int
+	makeSmallerMod int
 }
 
 func createMonkey(name int, match []string) *Monkey {
@@ -69,6 +70,10 @@ func (m *Monkey) play(isRelieved bool) map[int]*collections.Queue[int] {
 		if isRelieved {
 			newItem /= 3
 		}
+		if m.makeSmallerMod == 0 {
+			fmt.Println(m)
+		}
+		newItem = newItem % m.makeSmallerMod
 		var toMonkey int
 		if newItem%m.divCond == 0 {
 			toMonkey = m.trueTo
@@ -77,6 +82,10 @@ func (m *Monkey) play(isRelieved bool) map[int]*collections.Queue[int] {
 		}
 		if outMonkeys[toMonkey] == nil {
 			outMonkeys[toMonkey] = collections.NewQueue[int]()
+		}
+		if newItem < 0 {
+			fmt.Println(newItem, item)
+			os.Exit(1)
 		}
 		outMonkeys[toMonkey].Enqueue(newItem)
 		m.playedItems += 1
@@ -105,29 +114,39 @@ func getMonkeyBusiness(monkeys []*Monkey) int {
 	return monkeyBusiness
 }
 
+func createMonkeys(monkeyMatches [][]string) []*Monkey {
+	divMult := 1
+	monkeys := collections.MapWithIndex(monkeyMatches, func(i int, match []string) *Monkey {
+		monkey := createMonkey(i, match)
+		divMult *= monkey.divCond
+		return monkey
+	})
+	fmt.Println(divMult)
+	for _, monkey := range monkeys {
+		monkey.makeSmallerMod = divMult
+	}
+	return monkeys
+}
+
 func AoC11() {
 	year := 2022
 	day := 11
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
 
 	// setting EXAMPLE variable
-	_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
+	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
 	reg := "Monkey \\d+:\n +Starting items: ((?:\\d+(?:, )?)+)\n +Operation: ([^\n]+)\n + Test: divisible by (\\d+)\n +If true: throw to monkey (\\d+)\n +If false: throw to monkey (\\d+)"
 	monkeyMatches := io.ReadInputFromRegex(reg, 2022)
 	fmt.Println(monkeyMatches)
-	monkeys := collections.MapWithIndex(monkeyMatches, func(i int, match []string) *Monkey {
-		return createMonkey(i, match)
-	})
+	monkeys := createMonkeys(monkeyMatches)
 	fmt.Println("Part 1:")
 	play(monkeys, 20, true)
 	monkeyBusiness := getMonkeyBusiness(monkeys)
 	fmt.Println(monkeyBusiness)
 	requests.SubmitAnswer(day, year, monkeyBusiness, 1)
-	monkeys = collections.MapWithIndex(monkeyMatches, func(i int, match []string) *Monkey {
-		return createMonkey(i, match)
-	})
-	play(monkeys, 1000, false)
+	monkeys = createMonkeys(monkeyMatches)
+	play(monkeys, 10000, false)
 	monkeyBusiness = getMonkeyBusiness(monkeys)
 	fmt.Println(monkeyBusiness)
 	fmt.Println("Part 2:")
