@@ -23,6 +23,17 @@ func Last[T any](slice []T) T {
 	return slice[len(slice)-1]
 }
 
+func Reverse[T any](slice []T) []T {
+	inputLen := len(slice)
+	output := make([]T, inputLen)
+	for i, n := range slice {
+		j := inputLen - i - 1
+
+		output[j] = n
+	}
+	return output
+}
+
 func Filter[T any](slice []T, filterFunc func(T) bool) []T {
 	retSlice := make([]T, 0)
 
