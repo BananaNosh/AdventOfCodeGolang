@@ -104,3 +104,9 @@ func MaxNumber[T types.Number](slice []T) T { // TODO rename after package fix
 		return math.Max(acc, s)
 	}, slice[0])
 }
+
+func MinNumber[T types.Number](slice []T) T { // TODO rename after package fix
+	return Reduce(slice, func(acc T, s T) T {
+		return math.Min(acc, s)
+	}, slice[0])
+}

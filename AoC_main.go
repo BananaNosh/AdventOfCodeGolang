@@ -47,10 +47,10 @@ func main() {
 		AoC.AoC12()
 	case 13:
 		AoC.AoC13()
-	//case 14:
-	//	AoC.AoC14()
-	//case 15:
-	//	AoC.AoC15()
+	case 14:
+		AoC.AoC14()
+	case 15:
+		AoC.AoC15()
 	//case 16:
 	//	AoC.AoC16()
 	//case 17:
