@@ -1,4 +1,4 @@
-package AoC22
+package AoC_22_3
 
 import (
 	"AoC/utils/collections"

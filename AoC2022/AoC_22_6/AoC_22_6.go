@@ -1,4 +1,4 @@
-package AoC22
+package AoC_22_6
 
 import (
 	"AoC/utils/date"

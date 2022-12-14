@@ -1,4 +1,4 @@
-package AoC22
+package AoC_22_9
 
 import (
 	"AoC/utils/collections"
@@ -11,8 +11,8 @@ import (
 )
 
 type Position struct {
-	x int
-	y int
+	X int
+	Y int
 }
 
 type Rope struct {
@@ -53,9 +53,9 @@ func directionFromString(str string) Direction {
 	panic("No such Direction")
 }
 
-func (pos Position) move(direction Direction) Position {
-	xPos := pos.x
-	yPos := pos.y
+func (pos Position) Move(direction Direction) Position {
+	xPos := pos.X
+	yPos := pos.Y
 	switch direction {
 	case Up:
 		return Position{xPos, yPos - 1}
@@ -78,20 +78,20 @@ func (pos Position) move(direction Direction) Position {
 }
 
 func posRelativeToOther(pos, otherPos Position) Position {
-	return Position{pos.x - otherPos.x, pos.y - otherPos.y}
+	return Position{pos.X - otherPos.X, pos.Y - otherPos.Y}
 }
 
 func (r *Rope) move(instruction Instruction) {
 	dir := instruction.direction
 	count := instruction.count
 	for i := 0; i < count; i++ {
-		r.headPos = r.headPos.move(dir)
+		r.headPos = r.headPos.Move(dir)
 		currentPrev := r.headPos
 		for i, knotPos := range r.notHeadKnotsPositions {
 			relativePos := posRelativeToOther(knotPos, currentPrev)
 			knotDirection, moved := knotDirectionFromRelativePos(relativePos)
 			if moved {
-				knotPos = knotPos.move(knotDirection)
+				knotPos = knotPos.Move(knotDirection)
 				r.notHeadKnotsPositions[i] = knotPos
 			}
 			currentPrev = knotPos
@@ -106,30 +106,30 @@ func (r *Rope) move(instruction Instruction) {
 }
 
 func knotDirectionFromRelativePos(relativePos Position) (Direction, bool) {
-	xDist := math.Abs(relativePos.x)
-	yDist := math.Abs(relativePos.y)
+	xDist := math.Abs(relativePos.X)
+	yDist := math.Abs(relativePos.Y)
 	var tailDir Direction
 	if yDist == 2 && xDist == 0 {
-		if relativePos.y > 0 {
+		if relativePos.Y > 0 {
 			tailDir = Up
 		} else {
 			tailDir = Down
 		}
 	} else if xDist == 2 && yDist == 0 {
-		if relativePos.x > 0 {
+		if relativePos.X > 0 {
 			tailDir = Left
 		} else {
 			tailDir = Right
 		}
 	} else if xDist > 1 || yDist > 1 { // Needs to go dioganally up or down
-		if relativePos.y > 0 {
-			if relativePos.x > 0 {
+		if relativePos.Y > 0 {
+			if relativePos.X > 0 {
 				tailDir = UpLeft
 			} else {
 				tailDir = UpRight
 			}
 		} else {
-			if relativePos.x > 0 {
+			if relativePos.X > 0 {
 				tailDir = DownLeft
 			} else {
 				tailDir = DownRight

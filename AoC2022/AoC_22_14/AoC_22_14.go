@@ -1,6 +1,7 @@
-package AoC22
+package AoC_22_14
 
 import (
+	_9 "AoC/AoC2022/AoC_22_9"
 	"AoC/utils/collections"
 	"AoC/utils/date"
 	"AoC/utils/io"
@@ -111,26 +112,26 @@ func simulateSand(grid [][]GridType, shift int, show bool, stopAt50 bool) [][]Gr
 		copy(newGrid[i], row)
 	}
 	for true {
-		sandPosition := Position{sandStartX + shift, -1}
+		sandPosition := _9.Position{X: sandStartX + shift, Y: -1}
 		for true {
-			var newPos *Position
-			for _, direction := range []Direction{Down, DownLeft, DownRight} {
-				possiblePos := sandPosition.move(direction)
-				if possiblePos.y >= len(newGrid) {
-					newGrid[sandPosition.y][sandPosition.x] = Air
+			var newPos *_9.Position
+			for _, direction := range []_9.Direction{_9.Down, _9.DownLeft, _9.DownRight} {
+				possiblePos := sandPosition.Move(direction)
+				if possiblePos.Y >= len(newGrid) {
+					newGrid[sandPosition.Y][sandPosition.X] = Air
 					if show {
 						printGrid_(newGrid)
 					}
 					return newGrid
 				}
-				if newGrid[possiblePos.y][possiblePos.x] == Air {
+				if newGrid[possiblePos.Y][possiblePos.X] == Air {
 					newPos = &possiblePos
 					break
 				}
 			}
 			if newPos == nil || *newPos == sandPosition {
 				if stopAt50 {
-					if sandPosition.x == sandStartX+shift && sandPosition.y == 0 {
+					if sandPosition.X == sandStartX+shift && sandPosition.Y == 0 {
 						if show {
 							printGrid_(newGrid)
 						}
@@ -139,11 +140,11 @@ func simulateSand(grid [][]GridType, shift int, show bool, stopAt50 bool) [][]Gr
 				}
 				break
 			}
-			if sandPosition.y >= 0 {
-				newGrid[sandPosition.y][sandPosition.x] = Air
+			if sandPosition.Y >= 0 {
+				newGrid[sandPosition.Y][sandPosition.X] = Air
 			}
 			sandPosition = *newPos
-			newGrid[sandPosition.y][sandPosition.x] = Sand
+			newGrid[sandPosition.Y][sandPosition.X] = Sand
 			if show {
 				printGrid_(newGrid)
 			}

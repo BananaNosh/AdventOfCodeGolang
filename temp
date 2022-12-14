@@ -1,4 +1,4 @@
-package AoCyy
+package AoC_yy_dd
 
 import (
 	"AoC/utils/date"

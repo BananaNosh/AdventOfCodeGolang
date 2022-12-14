@@ -1,6 +1,7 @@
-package AoC22
+package AoC_22_12
 
 import (
+	_9 "AoC/AoC2022/AoC_22_9"
 	"AoC/utils/collections"
 	"AoC/utils/date"
 	"AoC/utils/io"
@@ -10,41 +11,41 @@ import (
 	"fmt"
 )
 
-func findPosOfValue(grid [][]string, toFind string) Position {
+func findPosOfValue(grid [][]string, toFind string) _9.Position {
 	for rowIndex, row := range grid {
 		for column, value := range row {
 			if value == toFind {
-				return Position{column, rowIndex}
+				return _9.Position{column, rowIndex}
 			}
 		}
 	}
 	panic("No start")
 }
 
-func getNeighboursFunc(grid [][]string) func(pos Position) []search.Neighbour[Position] {
-	return func(pos Position) []search.Neighbour[Position] {
-		possibleDirs := []Direction{Up, Right, Left, Down}
-		possibleNeighbourPositions := collections.Map(possibleDirs, func(dir Direction) Position {
-			return pos.move(dir)
+func getNeighboursFunc(grid [][]string) func(pos _9.Position) []search.Neighbour[_9.Position] {
+	return func(pos _9.Position) []search.Neighbour[_9.Position] {
+		possibleDirs := []_9.Direction{_9.Up, _9.Right, _9.Left, _9.Down}
+		possibleNeighbourPositions := collections.Map(possibleDirs, func(dir _9.Direction) _9.Position {
+			return pos.Move(dir)
 		})
-		var neighbours []search.Neighbour[Position]
+		var neighbours []search.Neighbour[_9.Position]
 		currentHeight := getHeight(grid, pos)
 		for _, neighbourPos := range possibleNeighbourPositions {
-			if neighbourPos.x < 0 || neighbourPos.x >= len(grid[0]) || neighbourPos.y < 0 || neighbourPos.y >= len(grid) {
+			if neighbourPos.X < 0 || neighbourPos.X >= len(grid[0]) || neighbourPos.Y < 0 || neighbourPos.Y >= len(grid) {
 				continue
 			}
 			neighbourHeight := getHeight(grid, neighbourPos)
 			if neighbourHeight-currentHeight <= 1 {
 				// height diff is not bigger than 1 or going down
-				neighbours = append(neighbours, search.Neighbour[Position]{neighbourPos, 1})
+				neighbours = append(neighbours, search.Neighbour[_9.Position]{neighbourPos, 1})
 			}
 		}
 		return neighbours
 	}
 }
 
-func getHeight(grid [][]string, position Position) int {
-	stringHeight := grid[position.y][position.x]
+func getHeight(grid [][]string, position _9.Position) int {
+	stringHeight := grid[position.Y][position.X]
 	if stringHeight == "S" {
 		stringHeight = "a"
 	}
@@ -54,23 +55,23 @@ func getHeight(grid [][]string, position Position) int {
 	return int(stringHeight[0])
 }
 
-func getHeuristic(goalPos Position, grid [][]string) func(Position) int {
-	return func(pos Position) int {
-		horizontalDist := math.Abs(pos.x-goalPos.x) + math.Abs(pos.y-goalPos.y)
+func getHeuristic(goalPos _9.Position, grid [][]string) func(_9.Position) int {
+	return func(pos _9.Position) int {
+		horizontalDist := math.Abs(pos.X-goalPos.X) + math.Abs(pos.Y-goalPos.Y)
 		verticalDist := math.Max(0, getHeight(grid, goalPos)-getHeight(grid, pos))
 		return math.Max(horizontalDist, verticalDist)
 	}
 }
 
-func findShortestPathFromAnyLowest(grid [][]string) []Position {
-	var shortestPath []Position
+func findShortestPathFromAnyLowest(grid [][]string) []_9.Position {
+	var shortestPath []_9.Position
 	goal := findPosOfValue(grid, "E")
 	for rowIndex, row := range grid {
 		for column, value := range row {
 			if value == "a" || value == "S" {
-				start := Position{column, rowIndex}
+				start := _9.Position{column, rowIndex}
 				fmt.Println("Try", start)
-				path := search.AlphaStar(start, getNeighboursFunc(grid), func(pos Position) bool { return pos == goal }, getHeuristic(goal, grid))
+				path := search.AlphaStar(start, getNeighboursFunc(grid), func(pos _9.Position) bool { return pos == goal }, getHeuristic(goal, grid))
 				if len(path) == 0 {
 					continue
 				}
@@ -98,7 +99,7 @@ func AoC12() {
 	goal := findPosOfValue(grid, "E")
 	fmt.Println(start, goal)
 	fmt.Println("Part 1:")
-	path := search.AlphaStar(start, getNeighboursFunc(grid), func(pos Position) bool { return pos == goal }, getHeuristic(goal, grid))
+	path := search.AlphaStar(start, getNeighboursFunc(grid), func(pos _9.Position) bool { return pos == goal }, getHeuristic(goal, grid))
 	fmt.Println(path)
 	fmt.Println(len(path))
 	requests.SubmitAnswer(day, year, len(path)-1, 1)
