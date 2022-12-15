@@ -18,7 +18,7 @@ type Position struct {
 type Rope struct {
 	headPos               Position
 	notHeadKnotsPositions []Position
-	seenTailPositions     collections.Set[Position]
+	seenTailPositions     *collections.Set[Position]
 }
 
 type Instruction struct {
@@ -142,7 +142,7 @@ func knotDirectionFromRelativePos(relativePos Position) (Direction, bool) {
 	return tailDir, true
 }
 
-func simulate(rope Rope, instructions []Instruction) collections.Set[Position] {
+func simulate(rope Rope, instructions []Instruction) *collections.Set[Position] {
 	rope.seenTailPositions.Add(collections.Last(rope.notHeadKnotsPositions))
 	for _, instruction := range instructions {
 		rope.move(instruction)

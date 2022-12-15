@@ -55,6 +55,16 @@ func SumMapValues[K Key, V NumberValue](_map map[K]V) V {
 	return sum
 }
 
+func ReduceMapValues[K Key, V, M any](_map map[K]V, f func(M, V) M, initValue M) M {
+	acc := initValue
+
+	for _, element := range _map {
+		acc = f(acc, element)
+	}
+
+	return acc
+}
+
 func Max[K, Key, V NumberValue](_map map[K]V) (K, V) {
 	var max V
 	var maxKey K

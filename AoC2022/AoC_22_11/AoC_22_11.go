@@ -137,7 +137,7 @@ func AoC11() {
 	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
 	reg := "Monkey \\d+:\n +Starting items: ((?:\\d+(?:, )?)+)\n +Operation: ([^\n]+)\n + Test: divisible by (\\d+)\n +If true: throw to monkey (\\d+)\n +If false: throw to monkey (\\d+)"
-	monkeyMatches := io.ReadInputFromRegex(reg, 2022)
+	monkeyMatches := io.ReadInputFromRegex(reg, 2022, 11)
 	fmt.Println(monkeyMatches)
 	monkeys := createMonkeys(monkeyMatches)
 	fmt.Println("Part 1:")

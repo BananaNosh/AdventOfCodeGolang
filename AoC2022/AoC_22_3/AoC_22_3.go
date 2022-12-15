@@ -18,7 +18,7 @@ func findWrongItemInRucksack(rucksack string) string {
 			items2.Add(string(item))
 		}
 	}
-	common := items1.Intersect(items2)
+	common := items1.Intersect(*items2)
 	fmt.Println(items1, items2, common)
 	return common.GetRandom()
 }
@@ -32,7 +32,7 @@ func valueForItem(item string) int {
 }
 
 func findValueOfBatch(group []string) int {
-	rucksacks := make([]collections.Set[string], len(group))
+	rucksacks := make([]*collections.Set[string], len(group))
 	for i, rucksack := range group {
 		rucksacks[i] = collections.NewSet[string]()
 		for _, item := range rucksack {
@@ -41,7 +41,7 @@ func findValueOfBatch(group []string) int {
 	}
 	common := rucksacks[0]
 	for _, rucksackSet := range rucksacks[1:] {
-		common = common.Intersect(rucksackSet)
+		common = common.Intersect(*rucksackSet)
 	}
 	return valueForItem(common.GetRandom())
 }

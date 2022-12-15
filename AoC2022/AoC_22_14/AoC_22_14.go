@@ -184,7 +184,7 @@ func AoC14() {
 	fmt.Println("Part 2:")
 	grid, shift = createGrid(rockLines, true)
 	printGrid_(grid)
-	grid = simulateSand(grid, shift, true, true)
+	grid = simulateSand(grid, shift, false, true)
 	totalSand = countSand(grid)
 	fmt.Println(totalSand)
 	requests.SubmitAnswer(day, year, totalSand, 2)

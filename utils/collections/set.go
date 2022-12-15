@@ -9,10 +9,10 @@ type Set[T Key] struct {
 	elements map[T]types.Nil
 }
 
-func NewSet[T Key]() Set[T] {
+func NewSet[T Key]() *Set[T] {
 	set := new(Set[T])
 	set.elements = make(map[T]types.Nil)
-	return *set
+	return set
 }
 
 func (set *Set[T]) Add(element T) {
@@ -29,7 +29,7 @@ func (set *Set[T]) Wipe() {
 	set.elements = make(map[T]types.Nil)
 }
 
-func (set *Set[T]) Copy() Set[T] {
+func (set *Set[T]) Copy() *Set[T] {
 	resultSet := NewSet[T]()
 
 	for element := range set.elements {
@@ -48,7 +48,7 @@ func (set *Set[T]) Size() int {
 	return len(set.elements)
 }
 
-func (set *Set[T]) Difference(setToIntersectWith Set[T]) Set[T] {
+func (set *Set[T]) Difference(setToIntersectWith Set[T]) *Set[T] {
 	resultSet := NewSet[T]()
 	for element := range set.elements {
 		if !setToIntersectWith.Has(element) {
@@ -59,7 +59,7 @@ func (set *Set[T]) Difference(setToIntersectWith Set[T]) Set[T] {
 	return resultSet
 }
 
-func (set *Set[T]) Intersect(setToIntersectWith Set[T]) Set[T] {
+func (set *Set[T]) Intersect(setToIntersectWith Set[T]) *Set[T] {
 	resultSet := NewSet[T]()
 	for element := range set.elements {
 		if setToIntersectWith.Has(element) {
@@ -94,13 +94,23 @@ func (set Set[T]) String() string {
 
 type CheckFunc[T Key] func(key T) bool
 
-func CheckAll[T Key](set Set[T], check CheckFunc[T]) bool {
+func CheckAll[T Key](set *Set[T], check CheckFunc[T]) bool {
 	for element := range set.elements {
 		if check(element) == false {
 			return false
 		}
 	}
 	return true
+}
+
+func Count[T Key](set *Set[T], cond CheckFunc[T]) int {
+	sum := 0
+	for element := range set.elements {
+		if cond(element) {
+			sum += 1
+		}
+	}
+	return sum
 }
 
 func compare[T Sortable](l, r T) int8 {
@@ -114,11 +124,11 @@ func compare[T Sortable](l, r T) int8 {
 }
 
 type OrderingSet[T SortableKey] struct {
-	Set[T]
+	*Set[T]
 }
 
-func NewComparingSet[T SortableKey]() OrderingSet[T] {
-	var set OrderingSet[T]
+func NewComparingSet[T SortableKey]() *OrderingSet[T] {
+	var set *OrderingSet[T]
 	s := NewSet[T]()
 	set.Set = s
 	return set
