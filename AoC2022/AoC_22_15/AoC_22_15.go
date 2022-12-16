@@ -24,44 +24,32 @@ func readSensorsAndBeacons(lines [][]int) []SensorWithBeacon {
 	return result
 }
 
-func findCoveredPositions(sensorsAndBeacons []SensorWithBeacon) map[int]*collections.Set[int] {
-	covered := make(map[int]*collections.Set[int])
-	for _, sensorAndBeacon := range sensorsAndBeacons {
-		sensor, beacon := sensorAndBeacon.sensor, sensorAndBeacon.beacon
-		distX := math.Abs(sensor.X - beacon.X)
-		distY := math.Abs(sensor.Y - beacon.Y)
-		totalDist := distX + distY
-		for y := 0; y < totalDist+1; y++ {
-			restDist := totalDist - y
-			for x := 0; x < restDist+1; x++ {
-				for _, xPos := range []int{x, -x} {
-					xPos = xPos + sensor.X
-					for _, yPos := range []int{y, -y} {
-						yPos = yPos + sensor.Y
-						if !collections.HasKey(covered, yPos) {
-							covered[yPos] = collections.NewSet[int]()
-						}
-						covered[yPos].Add(xPos)
-					}
-				}
-			}
-
-		}
+func coveredPositionsInLineCount(sensorsAndBeacons []SensorWithBeacon, line int) int {
+	ranges, blockedPositions := coveredPositionsInLine(sensorsAndBeacons, line, false, nil, nil)
+	if len(ranges) == 0 {
+		return 0
 	}
-	return covered
+	total := 0
+	for _, r := range ranges {
+		total += r[1] - r[0] + 1
+		total -= collections.Count(blockedPositions[line], func(xPos int) bool { return xPos >= r[0] && xPos <= r[1] })
+	}
+	return total
 }
 
-func coveredPositionsInLineCount(sensorsAndBeacons []SensorWithBeacon, line int) int {
+func coveredPositionsInLine(sensorsAndBeacons []SensorWithBeacon, line int, countSensorsAndBeacons bool, lowBound *int, upBound *int) ([][]int, map[int]*collections.Set[int]) {
 	blockedPositions := make(map[int]*collections.Set[int])
 	ranges := make([][]int, 0)
 	for _, sensorAndBeacon := range sensorsAndBeacons {
-		for _, pos := range []_9.Position{sensorAndBeacon.sensor, sensorAndBeacon.beacon} {
-			yPos := pos.Y
-			xPos := pos.X
-			if !collections.HasKey(blockedPositions, yPos) {
-				blockedPositions[yPos] = collections.NewSet[int]()
+		if !countSensorsAndBeacons {
+			for _, pos := range []_9.Position{sensorAndBeacon.sensor, sensorAndBeacon.beacon} {
+				yPos := pos.Y
+				xPos := pos.X
+				if !collections.HasKey(blockedPositions, yPos) {
+					blockedPositions[yPos] = collections.NewSet[int]()
+				}
+				blockedPositions[yPos].Add(xPos)
 			}
-			blockedPositions[yPos].Add(xPos)
 		}
 		sensor, beacon := sensorAndBeacon.sensor, sensorAndBeacon.beacon
 		distX := math.Abs(sensor.X - beacon.X)
@@ -72,15 +60,16 @@ func coveredPositionsInLineCount(sensorsAndBeacons []SensorWithBeacon, line int)
 		if remaining > 0 {
 			min := sensor.X - remaining
 			max := sensor.X + remaining
+			if lowBound != nil && upBound != nil {
+				min = math.Max(min, *lowBound)
+				max = math.Min(max, *upBound)
+			}
 			ranges = append(ranges, []int{min, max})
 		}
 	}
 	sort.Slice(ranges, func(i, j int) bool {
 		return ranges[i][0] < ranges[j][0] || (ranges[i][0] == ranges[j][0] && ranges[i][1] < ranges[j][1])
 	})
-	if len(ranges) == 0 {
-		return 0
-	}
 	index := 0
 	for index < len(ranges)-1 {
 		current := ranges[index]
@@ -92,12 +81,23 @@ func coveredPositionsInLineCount(sensorsAndBeacons []SensorWithBeacon, line int)
 			index += 1
 		}
 	}
-	total := 0
-	for _, r := range ranges {
-		total += r[1] - r[0] + 1
-		total -= collections.Count(blockedPositions[line], func(xPos int) bool { return xPos >= r[0] && xPos <= r[1] })
+	return ranges, blockedPositions
+}
+
+func findSignalPos(sensorsAndBeacons []SensorWithBeacon, max int) _9.Position {
+	var foundPos _9.Position
+	min := 0
+	for i := 0; i <= max; i++ {
+		if i%1000 == 0 {
+			fmt.Println(i)
+		}
+		ranges, _ := coveredPositionsInLine(sensorsAndBeacons, i, true, &min, &max)
+		if len(ranges) > 1 {
+			foundPos = _9.Position{ranges[0][1] + 1, i}
+			break
+		}
 	}
-	return total
+	return foundPos
 }
 
 func AoC15() {
@@ -106,9 +106,11 @@ func AoC15() {
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
 
 	lineToInspect := 2000000
+	max := 4000000
 	// setting EXAMPLE variable
 	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 	//lineToInspect = 10
+	//max = 20
 
 	lines := io.ReadInputFromRegexPerLineInt("(?:\\w+ ){2}x=(-?\\d+), y=(-?\\d+): (?:\\w+ ){4}x=(-?\\d+), y=(-?\\d+)", 15, 2022)
 	fmt.Println(lines)
@@ -129,5 +131,8 @@ func AoC15() {
 	requests.SubmitAnswer(day, year, coveredCount, 1)
 
 	fmt.Println("Part 2:")
-	// requests.SubmitAnswer(day, year, 0, 2)
+	signalPos := findSignalPos(sensorsAndBeacons, max)
+	freq := signalPos.X*4000000 + signalPos.Y
+	fmt.Println(signalPos, freq)
+	requests.SubmitAnswer(day, year, freq, 2)
 }
