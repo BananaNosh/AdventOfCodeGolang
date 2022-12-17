@@ -21,7 +21,7 @@ func AStar[T comparable](start T, neighboursWithDistFunc func(T) [](Neighbour[T]
 	return aStarWithMaxDistanceOrGoal(start, neighboursWithDistFunc, isGoal, heuristic, -1)
 }
 
-func AStarWithMaxDistance[T comparable](start T, neighboursWithDistFunc func(T) [](Neighbour[T]), heuristic func(T) int, maxDistance int) []T {
+func AStarWithMaxDistance[T comparable](start T, neighboursWithDistFunc func(T) [](Neighbour[T]), heuristic func(T) int, maxDistance int) []T { // TODO refactor
 	return aStarWithMaxDistanceOrGoal(start, neighboursWithDistFunc, func(T) bool {
 		return false
 	}, heuristic, maxDistance)
@@ -52,7 +52,7 @@ func aStarWithMaxDistanceOrGoal[T comparable](start T, neighboursWithDistFunc fu
 				continue
 			}
 			if maxDistance < 0 || maxDistance >= neighbourDist {
-				queue.Add(Item[T]{neighbourPos, neighbourDist, &currentItem}, -neighbourPrio)
+				queue.Add(Item[T]{neighbourPos, neighbourDist, &currentItem, currentItem.depth + 1}, -neighbourPrio)
 			}
 			seen[neighbourPos] = neighbourDist
 		}
@@ -94,7 +94,7 @@ func BreadthFirst[T comparable](start T, neighboursFunc func(T) []T, isGoal func
 	return make([]T, 0)
 }
 
-func FindBestWithIdentify[T any, C comparable](start T, neighboursWithDistFunc func(T) [](Neighbour[T]), valueFunc func(T) int, maxDepth int, identify func(T) C) []T {
+func FindBestWithIdentify[T any, C comparable](start T, neighboursFunc func(T) []T, valueFunc func(T) int, maxDepth int, identify func(T) C) []T {
 	queue := collections.NewQueue[Item[T]]()
 	queue.Enqueue(Item[T]{value: start})
 	seen := make(map[C]int) // the already seen items with their goneDistance
@@ -108,20 +108,18 @@ func FindBestWithIdentify[T any, C comparable](start T, neighboursWithDistFunc f
 			best = currentItem
 			bestValue = &currentValueValue
 		}
-		//fmt.Println(currentItem.goneDistance)
+		fmt.Println(currentItem.depth)
 		if currentItem.depth < maxDepth {
-			for _, neighbour := range neighboursWithDistFunc(currentItem.value) {
-				distToNeighbour := neighbour.Distance
-				neighbourPos := neighbour.Value
-				if currentItem.prev != nil && identify(neighbourPos) == identify(currentItem.prev.value) {
+			for _, neighbour := range neighboursFunc(currentItem.value) {
+				if currentItem.prev != nil && identify(neighbour) == identify(currentItem.prev.value) {
 					continue
 				}
-				neighbourDist := currentItem.goneDistance + distToNeighbour
-				if collections.HasKey(seen, identify(neighbourPos)) && seen[identify(neighbourPos)] <= neighbourDist {
+				neighbourDist := currentItem.goneDistance + 1
+				if collections.HasKey(seen, identify(neighbour)) && seen[identify(neighbour)] >= valueFunc(neighbour) {
 					continue
 				}
-				seen[identify(neighbourPos)] = neighbourDist
-				queue.Enqueue(Item[T]{neighbourPos, neighbourDist, &currentItem, currentItem.depth + 1})
+				seen[identify(neighbour)] = valueFunc(neighbour)
+				queue.Enqueue(Item[T]{neighbour, neighbourDist, &currentItem, currentItem.depth + 1})
 			}
 		}
 	}
@@ -129,8 +127,8 @@ func FindBestWithIdentify[T any, C comparable](start T, neighboursWithDistFunc f
 
 }
 
-func FindBest[T comparable](start T, neighboursWithDistFunc func(T) [](Neighbour[T]), valueFunc func(T) int, maxDepth int) []T {
-	return FindBestWithIdentify(start, neighboursWithDistFunc, valueFunc, maxDepth, func(t T) T {
+func FindBest[T comparable](start T, neighboursFunc func(T) []T, valueFunc func(T) int, maxDepth int) []T {
+	return FindBestWithIdentify(start, neighboursFunc, valueFunc, maxDepth, func(t T) T {
 		return t
 	})
 }

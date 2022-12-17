@@ -4,9 +4,9 @@ import (
 	"AoC/utils/collections"
 	"AoC/utils/date"
 	"AoC/utils/io"
+	"AoC/utils/requests"
 	"AoC/utils/search"
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -97,7 +97,7 @@ func AoC16() {
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
 
 	// setting EXAMPLE variable
-	_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
+	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
 	valveValues := io.ReadInputFromRegexPerLine("Valve (\\w+) (?:\\w+ )+rate=(\\d+); (?:\\w+ )+valves? ([\\w, ]+)", 16, 2022)
 	fmt.Println(valveValues)
@@ -112,17 +112,17 @@ func AoC16() {
 		pos:           firstValve,
 	}
 	maxDepth := 30
-	heuristic := func(state State) int {
-		return 0 //-state.totalReleased
-	}
+	//heuristic := func(state State) int {
+	//	return 0 //-state.totalReleased
+	//}
 	identify := func(state State) string {
 		setAsStrings := collections.Map(state.opened.AsSlice(), func(v *Valve) string {
 			return v.name
 		})
 		sort.Strings(setAsStrings)
-		return state.pos.name + ":" + strings.Join(setAsStrings, "-") + ":" + strconv.Itoa(state.totalReleased)
+		return state.pos.name + ":" + strings.Join(setAsStrings, "-")
 	}
-	path := search.FindBestWithIdentify(startState, getNeighbourWithDistFunc(), func(state State) int { return state.totalReleased }, maxDepth+1, identify)
+	path := search.FindBestWithIdentify(startState, getNeighbourFunc(), func(state State) int { return state.totalReleased }, maxDepth, identify)
 	for _, state := range path {
 		fmt.Print(identify(state) + ", ")
 	}
@@ -130,7 +130,7 @@ func AoC16() {
 	totalReleased := collections.Last(path).totalReleased
 	fmt.Println(totalReleased)
 
-	// requests.SubmitAnswer(day, year, 0, 1)
+	requests.SubmitAnswer(day, year, totalReleased, 1)
 
 	fmt.Println("Part 2:")
 	// requests.SubmitAnswer(day, year, 0, 2)
