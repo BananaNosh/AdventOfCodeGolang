@@ -71,7 +71,7 @@ func findShortestPathFromAnyLowest(grid [][]string) []_9.Position {
 			if value == "a" || value == "S" {
 				start := _9.Position{column, rowIndex}
 				fmt.Println("Try", start)
-				path := search.AlphaStar(start, getNeighboursFunc(grid), func(pos _9.Position) bool { return pos == goal }, getHeuristic(goal, grid))
+				path := search.AStar(start, getNeighboursFunc(grid), func(pos _9.Position) bool { return pos == goal }, getHeuristic(goal, grid))
 				if len(path) == 0 {
 					continue
 				}
@@ -99,7 +99,7 @@ func AoC12() {
 	goal := findPosOfValue(grid, "E")
 	fmt.Println(start, goal)
 	fmt.Println("Part 1:")
-	path := search.AlphaStar(start, getNeighboursFunc(grid), func(pos _9.Position) bool { return pos == goal }, getHeuristic(goal, grid))
+	path := search.AStar(start, getNeighboursFunc(grid), func(pos _9.Position) bool { return pos == goal }, getHeuristic(goal, grid))
 	fmt.Println(path)
 	fmt.Println(len(path))
 	requests.SubmitAnswer(day, year, len(path)-1, 1)

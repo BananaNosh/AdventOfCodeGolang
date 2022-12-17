@@ -24,7 +24,7 @@ func Peek[K Key, V Value](_map map[K]V) K {
 	return empty
 }
 
-func HasKey[K Key, V Value](_map map[K]V, searchedKey K) bool {
+func HasKey[K Key, V any](_map map[K]V, searchedKey K) bool {
 	for key := range _map {
 		if key == searchedKey {
 			return true

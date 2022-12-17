@@ -83,6 +83,14 @@ func (set *Set[T]) GetRandomOrDefault(def T) T {
 	return def
 }
 
+func (set *Set[T]) AsSlice() []T {
+	slice := make([]T, 0)
+	for element, _ := range set.elements {
+		slice = append(slice, element)
+	}
+	return slice
+}
+
 func (set Set[T]) String() string {
 	str := "{ "
 	for element := range set.elements {
