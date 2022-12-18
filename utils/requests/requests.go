@@ -72,7 +72,7 @@ func LoadExample(day int, year int) (example string) {
 	preSelector.Each(func(i int, possibleExample *goquery.Selection) {
 		//fmt.Println(possibleExample.Text())
 		previousLine := possibleExample.Prev().Text()
-		exampleReg := regexp.MustCompile("For example(,[^\\n]+)?:")
+		exampleReg := regexp.MustCompile("For example(,[^\\n]+)?:|Here's a larger example")
 		if exampleReg.MatchString(previousLine) {
 			example = possibleExample.Text()
 			return

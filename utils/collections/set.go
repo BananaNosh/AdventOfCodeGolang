@@ -19,6 +19,12 @@ func (set *Set[T]) Add(element T) {
 	set.elements[element] = types.Nil{}
 }
 
+func (set *Set[T]) AddMultiple(elements []T) {
+	for _, e := range elements {
+		set.Add(e)
+	}
+}
+
 func (set *Set[T]) Remove(element T) {
 	if _, isInMap := set.elements[element]; isInMap {
 		delete(set.elements, element)
