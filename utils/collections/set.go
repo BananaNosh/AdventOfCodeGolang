@@ -54,7 +54,7 @@ func (set *Set[T]) Size() int {
 	return len(set.elements)
 }
 
-func (set *Set[T]) Difference(setToIntersectWith Set[T]) *Set[T] {
+func (set *Set[T]) Difference(setToIntersectWith *Set[T]) *Set[T] {
 	resultSet := NewSet[T]()
 	for element := range set.elements {
 		if !setToIntersectWith.Has(element) {
@@ -65,7 +65,7 @@ func (set *Set[T]) Difference(setToIntersectWith Set[T]) *Set[T] {
 	return resultSet
 }
 
-func (set *Set[T]) Intersect(setToIntersectWith Set[T]) *Set[T] {
+func (set *Set[T]) Intersect(setToIntersectWith *Set[T]) *Set[T] {
 	resultSet := NewSet[T]()
 	for element := range set.elements {
 		if setToIntersectWith.Has(element) {
