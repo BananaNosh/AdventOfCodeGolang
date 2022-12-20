@@ -11,7 +11,10 @@ import (
 	"AoC/AoC2022/AoC_22_16"
 	"AoC/AoC2022/AoC_22_17"
 	"AoC/AoC2022/AoC_22_18"
+	"AoC/AoC2022/AoC_22_19"
 	"AoC/AoC2022/AoC_22_2"
+	"AoC/AoC2022/AoC_22_20"
+	"AoC/AoC2022/AoC_22_21"
 	"AoC/AoC2022/AoC_22_3"
 	"AoC/AoC2022/AoC_22_4"
 	"AoC/AoC2022/AoC_22_5"
@@ -19,9 +22,6 @@ import (
 	"AoC/AoC2022/AoC_22_7"
 	"AoC/AoC2022/AoC_22_8"
 	"AoC/AoC2022/AoC_22_9"
-	//"AoC/AoC2022/AoC_22_19"
-	//"AoC/AoC2022/AoC_22_20"
-	//"AoC/AoC2022/AoC_22_21"
 	//"AoC/AoC2022/AoC_22_22"
 	//"AoC/AoC2022/AoC_22_23"
 	//"AoC/AoC2022/AoC_22_24"
@@ -82,12 +82,12 @@ func main() {
 			AoC_22_17.AoC17()
 		case 18:
 			AoC_22_18.AoC18()
-		//case 19:
-		//	AoC_22_19.AoC19()
-		//case 20:
-		//	AoC_22_20.AoC20()
-		//case 21:
-		//	AoC_22_21.AoC21()
+		case 19:
+			AoC_22_19.AoC19()
+		case 20:
+			AoC_22_20.AoC20()
+		case 21:
+			AoC_22_21.AoC21()
 		//case 22:
 		//	AoC_22_22.AoC22()
 		//case 23:
