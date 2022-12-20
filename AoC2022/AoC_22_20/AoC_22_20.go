@@ -5,9 +5,9 @@ import (
 	"AoC/utils/date"
 	"AoC/utils/io"
 	"AoC/utils/math"
+	"AoC/utils/requests"
 	"AoC/utils/types"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -39,58 +39,65 @@ func (n *ConnectedNumber) toInts() []int {
 	return ints
 }
 
-func mixNumbers(first *ConnectedNumber) *ConnectedNumber {
+func mixNumbers(first *ConnectedNumber, count int) *ConnectedNumber {
+	fmt.Println("Start")
 	fmt.Println(first.toString())
 	numbers := first.toInts()
-
-	current := first
-	for _, n := range numbers {
-		current = findNumber(first, n)
-		fmt.Println(n)
-		steps := current.number
-		if steps == 0 {
-			continue
-		}
-
-		prev := current.prev
-		next := current.next
-		prev.next = next
-		next.prev = prev
-
-		var newPrev *ConnectedNumber
-		if steps > 0 {
-			newPrev = current
-		} else {
-			newPrev = current.prev
-		}
-		for s := 0; s < math.Abs(steps); s++ {
-			if steps > 0 {
-				newPrev = newPrev.next
-			} else {
-				newPrev = newPrev.prev
-			}
-		}
-
-		newNext := newPrev.next
-		current.prev = newPrev
-		current.next = newNext
-		newNext.prev = current
-		newPrev.next = current
-
-		fmt.Println(first.toString())
-	}
-	return findNumber(first, 0)
-}
-
-func findNumber(first *ConnectedNumber, number int) *ConnectedNumber {
-	current := first
-	for current.number != number {
+	originalNext := make(map[*ConnectedNumber]*ConnectedNumber)
+	current := first.next
+	originalNext[first] = first.next
+	total := 1
+	for current != first {
+		originalNext[current] = current.next
 		current = current.next
-		if current == first {
-			return nil
-		}
+		total += 1
 	}
-	return current
+	fmt.Println("total", total)
+
+	var zero *ConnectedNumber
+	for i := 0; i < count; i++ {
+		current = first
+		for range numbers {
+			//fmt.Println(current.number)
+			if current.number == 0 {
+				zero = current
+			}
+			steps := current.number % (total - 1)
+			if steps == 0 {
+				current = originalNext[current]
+				continue
+			}
+
+			prev := current.prev
+			next := current.next
+			prev.next = next
+			next.prev = prev
+
+			var newPrev *ConnectedNumber
+			if steps > 0 {
+				newPrev = current
+			} else {
+				newPrev = current.prev
+			}
+			for s := 0; s < math.Abs(steps); s++ {
+				if steps > 0 {
+					newPrev = newPrev.next
+				} else {
+					newPrev = newPrev.prev
+				}
+			}
+
+			newNext := newPrev.next
+			current.prev = newPrev
+			current.next = newNext
+			newNext.prev = current
+			newPrev.next = current
+
+			current = originalNext[current]
+		}
+		fmt.Println(i+1, zero.toString())
+	}
+	return zero
 }
 
 func numbersToConnected(numbers []int) *ConnectedNumber {
@@ -128,19 +135,31 @@ func AoC20() {
 	fmt.Println("On " + date.DateStringForDay(year, day) + ":")
 
 	// setting EXAMPLE variable
-	_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
+	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
 	lines := io.ReadInputLines(20, 2022)
 	numbers := types.ToIntSlice(lines)
-	fmt.Println(len(numbers), collections.MaxNumber(numbers))
+
+	set := collections.NewSet[int]()
+	set.AddMultiple(numbers)
+	fmt.Println(len(numbers), set.Size(), collections.MaxNumber(numbers))
 	fmt.Println("Part 1:")
 	first := numbersToConnected(numbers)
-	mixed := mixNumbers(first)
+	mixed := mixNumbers(first, 1)
 	fmt.Println(mixed.toString())
 	key := keyFromMixed(mixed.toInts(), []int{1000, 2000, 3000})
 	fmt.Println(key)
-	//requests.SubmitAnswer(day, year, key, 1)
+	requests.SubmitAnswer(day, year, key, 1)
 
 	fmt.Println("Part 2:")
-	// requests.SubmitAnswer(day, year, 0, 2)
+	decryptionKey := 811589153
+	//bigNumbers := ndarray.New1D(numbers).MulScalar(decryptionKey).GetSlice(math.Range(len(numbers)))
+	bigNumbers := collections.Map(numbers, func(n int) int {
+		return n * decryptionKey
+	})
+	first = numbersToConnected(bigNumbers)
+	mixed = mixNumbers(first, 10)
+	key = keyFromMixed(mixed.toInts(), []int{1000, 2000, 3000})
+	fmt.Println(key)
+	requests.SubmitAnswer(day, year, key, 2)
 }

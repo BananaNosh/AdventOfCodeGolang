@@ -15,11 +15,11 @@ type NDArray[T types.Number] struct {
 	compact   bool
 }
 
-func New1D[T types.Number](slice []T) NDArray[T] {
+func New1D[T types.Number](slice []T) *NDArray[T] {
 	return New[T](slice, []int{len(slice)})
 }
 
-func New2D[T types.Number](slice [][]T) NDArray[T] {
+func New2D[T types.Number](slice [][]T) *NDArray[T] {
 	shape := []int{len(slice), len(slice[0])}
 	flatSlice := make([]T, shape[0]*shape[1])
 	for i, row := range slice {
@@ -30,7 +30,7 @@ func New2D[T types.Number](slice [][]T) NDArray[T] {
 	return New[T](flatSlice, shape)
 }
 
-func Empty[T types.Number](shape []int) NDArray[T] {
+func Empty[T types.Number](shape []int) *NDArray[T] {
 	size := collections.Prod(shape)
 	flat := make([]T, size)
 	var strides []int
@@ -39,10 +39,10 @@ func Empty[T types.Number](shape []int) NDArray[T] {
 		strides = append(strides, stride)
 		stride /= s
 	}
-	return NDArray[T]{flatArray: flat, Shape: shape, strides: strides, offset: 0, compact: true}
+	return &NDArray[T]{flatArray: flat, Shape: shape, strides: strides, offset: 0, compact: true}
 }
 
-func New[T types.Number](flatSlice []T, shape []int) NDArray[T] {
+func New[T types.Number](flatSlice []T, shape []int) *NDArray[T] {
 	n := Empty[T](shape)
 	if n.Size() > len(flatSlice) {
 		panic("Not matchable")
