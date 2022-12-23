@@ -39,7 +39,7 @@ const (
 	UpLeft
 )
 
-func directionFromString(str string) Direction {
+func DirectionFromString(str string) Direction {
 	switch str {
 	case "U":
 		return Up
@@ -75,6 +75,17 @@ func (pos Position) Move(direction Direction) Position {
 		return Position{xPos - 1, yPos - 1}
 	}
 	panic("Wrong direction")
+}
+
+func (dir Direction) Turn(clockWise bool, countInEighth int) Direction {
+	newDirInt := int(dir)
+	if clockWise {
+		newDirInt += countInEighth
+	} else {
+		newDirInt += 8 - countInEighth
+	}
+	newDirInt %= 8
+	return Direction(newDirInt)
 }
 
 func posRelativeToOther(pos, otherPos Position) Position {
@@ -161,7 +172,7 @@ func AoC9() {
 	instructionTuples := io.ReadInputFromRegexPerLine("(\\w) (\\d+)", 9, 2022)
 	instructions := collections.Map(instructionTuples, func(tuple []string) Instruction {
 		count, _ := strconv.Atoi(tuple[1])
-		return Instruction{direction: directionFromString(tuple[0]), count: count}
+		return Instruction{direction: DirectionFromString(tuple[0]), count: count}
 	})
 	fmt.Println("Part 1:")
 	fmt.Println(instructions)
