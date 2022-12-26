@@ -17,6 +17,8 @@ import (
 	"AoC/AoC2022/AoC_22_21"
 	"AoC/AoC2022/AoC_22_22"
 	"AoC/AoC2022/AoC_22_23"
+	"AoC/AoC2022/AoC_22_24"
+	"AoC/AoC2022/AoC_22_25"
 	"AoC/AoC2022/AoC_22_3"
 	"AoC/AoC2022/AoC_22_4"
 	"AoC/AoC2022/AoC_22_5"
@@ -24,8 +26,6 @@ import (
 	"AoC/AoC2022/AoC_22_7"
 	"AoC/AoC2022/AoC_22_8"
 	"AoC/AoC2022/AoC_22_9"
-	//"AoC/AoC2022/AoC_22_24"
-	//"AoC/AoC2022/AoC_22_25"
 	"fmt"
 	"os"
 	"strconv"
@@ -92,10 +92,10 @@ func main() {
 			AoC_22_22.AoC22()
 		case 23:
 			AoC_22_23.AoC23()
-		//case 24:
-		//	AoC_22_24.AoC24()
-		//case 25:
-		//	AoC_22_25.AoC25()
+		case 24:
+			AoC_22_24.AoC24()
+		case 25:
+			AoC_22_25.AoC25()
 		default:
 			AoC_22_1.AoC1()
 		}
