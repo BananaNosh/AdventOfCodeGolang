@@ -26,19 +26,19 @@ type Value struct {
 	operation Op
 }
 
+var opStrings = []string{"+", "-", "*", "/"}
+
 func opFromString(str string) Op {
-	switch str {
-	case "+":
-		return ADD
-	case "-":
-		return SUB
-	case "*":
-		return MUL
-	case "/":
-		return DIV
-	default:
-		panic("No such Op")
+	for i, opString := range opStrings {
+		if str == opString {
+			return Op(i + 1)
+		}
 	}
+	panic("No such Op")
+}
+
+func (op Op) toString() string {
+	return opStrings[int(op)-1]
 }
 
 func (op Op) inverseOp() Op {
@@ -58,7 +58,15 @@ func (op Op) inverseOp() Op {
 	}
 }
 
-func (val Value) compute() int {
+func (op Op) inverseOpForArgIndex(argIndex int) Op {
+	if argIndex == 1 && (op == DIV || op == SUB) {
+		return op
+	} else {
+		return op.inverseOp()
+	}
+}
+
+func (val *Value) compute() int {
 	switch val.operation {
 	case NONE:
 		return val.value
@@ -73,6 +81,71 @@ func (val Value) compute() int {
 	default:
 		panic("Op not implemented")
 	}
+}
+
+//func (val *Value) toString() string {
+//	if val.operation == NONE {
+//		return val.name
+//	}
+//
+//}
+
+func (val *Value) hasHumnInput() bool {
+	if val.name == "humn" {
+		return true
+	}
+	if val.operation == NONE {
+		return false
+	}
+	return collections.Reduce(val.args, func(has bool, arg *Value) bool {
+		return arg.hasHumnInput() || has
+	}, false)
+}
+
+func (val *Value) backward(start *Value) *Value {
+	if val.operation == NONE {
+		return start
+	}
+	humnIndex := -1
+	for i, arg := range val.args {
+		if arg.hasHumnInput() {
+			humnIndex = i
+			break
+		}
+	}
+	if humnIndex == -1 {
+		panic("Humn should be in this path")
+	}
+	op := val.operation.inverseOpForArgIndex(humnIndex)
+	newArgs := make([]*Value, len(val.args))
+	copy(newArgs, val.args)
+	newArgs[humnIndex] = start
+	if humnIndex == 1 && (val.operation == ADD || val.operation == MUL) {
+		newArgs = collections.Reverse(newArgs)
+	}
+	backVal := &Value{
+		name:      "inv-" + val.name,
+		value:     0,
+		args:      newArgs,
+		operation: op,
+	}
+	return val.args[humnIndex].backward(backVal)
+
+}
+
+func getInputToMatch(operations map[string]*Value) int {
+	root := operations["root"]
+	humnIndex := 0
+	for i, arg := range root.args {
+		if arg.hasHumnInput() {
+			humnIndex = i
+			break
+		}
+	}
+	fmt.Println("Should be ", root.args[1-humnIndex].compute())
+	fmt.Println("Is ", root.args[humnIndex].compute())
+	backward := root.args[humnIndex].backward(root.args[1-humnIndex])
+	return backward.compute()
 }
 
 func parseMonkeys(monkeys [][]string) map[string]*Value {
@@ -101,25 +174,18 @@ func parseMonkeys(monkeys [][]string) map[string]*Value {
 	return nameToOp
 }
 
-func getInputToMatch(operations map[string]*Value) int {
-	root := operations["root"]
-	for _, arg := range root.args {
-		start := &Value{name: "start"}
-		reverseToHumn(arg, start)
-	}
-}
-
-func reverseToHumn(arg *Value, start *Value) *Value {
-	if arg.name == "humn" {
-		return arg
-	}
-	next := &Value{
-		name:      "inv-" + arg.name,
-		args:      []*Value{start, arg},
-		operation: arg.operation.inverseOp(),
-	}
-
-}
+//
+//func reverseToHumn(arg *Value, start *Value) *Value {
+//	if arg.name == "humn" {
+//		return arg
+//	}
+//	next := &Value{
+//		name:      "inv-" + arg.name,
+//		args:      []*Value{start, arg},
+//		operation: arg.operation.inverseOp(),
+//	}
+//
+//}
 
 func AoC21() {
 	year := 2022
@@ -129,7 +195,7 @@ func AoC21() {
 	// setting EXAMPLE variable
 	//_ = os.Setenv(fmt.Sprintf(io.ExampleOsVariableName, year, day), strconv.FormatBool(true))
 
-	input := io.ReadInputFromRegexPerLine("(\\w+): (?:(\\d+)|(\\w+) (.) (\\w+))", 21, 2022)
+	input := io.ReadInputFromRegexPerLine("(\\w+): (?:(-?\\d+)|(\\w+) (.) (\\w+))", 21, 2022)
 	fmt.Println(input)
 	operationsDict := parseMonkeys(input)
 	fmt.Println("Part 1:")
@@ -139,6 +205,9 @@ func AoC21() {
 	requests.SubmitAnswer(day, year, result, 1)
 
 	fmt.Println("Part 2:")
-
-	// requests.SubmitAnswer(day, year, 0, 2)
+	inputToMatch := getInputToMatch(operationsDict)
+	fmt.Println("res ", inputToMatch)
+	//fmt.Println(operationsDict["sjmn"].compute())
+	//fmt.Println(94625185243550 - 236694194244295)
+	requests.SubmitAnswer(day, year, inputToMatch, 2)
 }
